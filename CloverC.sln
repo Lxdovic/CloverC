@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloverC", "CloverC\CloverC.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloverC.Tests", "CloverC.Tests\CloverC.Tests.csproj", "{DF595F17-CEAE-4EF3-AF68-8B73DC25F562}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Driver", "Driver\Driver.csproj", "{8D0A6B68-596F-4158-8B22-24D2D551F8B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Driver.Tests", "Driver.Tests\Driver.Tests.csproj", "{1E65D776-1EC8-47B7-AE40-BE7BB53FB0DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,5 +23,13 @@ Global
 		{DF595F17-CEAE-4EF3-AF68-8B73DC25F562}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF595F17-CEAE-4EF3-AF68-8B73DC25F562}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF595F17-CEAE-4EF3-AF68-8B73DC25F562}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D0A6B68-596F-4158-8B22-24D2D551F8B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D0A6B68-596F-4158-8B22-24D2D551F8B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D0A6B68-596F-4158-8B22-24D2D551F8B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D0A6B68-596F-4158-8B22-24D2D551F8B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E65D776-1EC8-47B7-AE40-BE7BB53FB0DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E65D776-1EC8-47B7-AE40-BE7BB53FB0DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E65D776-1EC8-47B7-AE40-BE7BB53FB0DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E65D776-1EC8-47B7-AE40-BE7BB53FB0DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
