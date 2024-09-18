@@ -2,21 +2,13 @@ using Xunit.Abstractions;
 
 namespace Driver.Tests;
 
-public class DriverTests {
-    private readonly ITestOutputHelper _output;
-
-    public DriverTests(ITestOutputHelper output) {
-        _output = output;
-    }
+public class DriverTests(ITestOutputHelper output) {
+    private readonly ITestOutputHelper _output = output;
 
     [Fact]
     public void DriverTakesInput() {
         var driver = new Driver();
-        var filePath = Path.Combine(Environment.CurrentDirectory, "Resources/input/tet.c");
-
-        using var sw = new StringWriter();
-
-        Console.SetOut(sw);
+        var filePath = Path.Combine(Environment.CurrentDirectory, "Resources/input/test.c");
 
         var exception = Record.Exception(() => driver.Run([filePath]));
 
