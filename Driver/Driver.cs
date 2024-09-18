@@ -13,5 +13,9 @@ public sealed class Driver {
         var filePath = args[0];
 
         if (!Path.Exists(filePath)) Error($"File '{filePath}' does not exist.");
+
+        var shell = new Shell();
+
+        shell.Run($"gcc -E -P {filePath} -o {Path.ChangeExtension(filePath, ".i")}");
     }
 }
