@@ -1,6 +1,5 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloverC", "CloverC\CloverC.csproj", "{FB28C0C7-6762-46B2-92FE-CCA110D1816E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloverC.Tests", "CloverC.Tests\CloverC.Tests.csproj", "{DF595F17-CEAE-4EF3-AF68-8B73DC25F562}"
