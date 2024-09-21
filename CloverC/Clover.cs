@@ -1,3 +1,5 @@
+using CloverC.Syntax;
+
 namespace CloverC;
 
 public class Clover {
@@ -7,16 +9,30 @@ public class Clover {
         Environment.Exit(1);
     }
 
-    public string Run(string[] args) {
-        if (args.Length == 0) Error("Usage: clover <source-file>");
+    public void Run(string[] args, string input, string? output) {
+        if (!Path.Exists(input)) Error($"File '{input}' does not exist.");
 
-        var inputFilePath = args[0];
-        var outputFilePath = args.Length > 1 ? args[1] : Path.ChangeExtension(inputFilePath, ".s");
+        var document = File.ReadAllText(input);
+        var generated = "";
 
-        if (!Path.Exists(inputFilePath)) Error($"File '{inputFilePath}' does not exist.");
+        if (args.Contains("--lex")) {
+            var tokens = new Lexer(document).Lex();
+            Environment.Exit(0);
+        }
 
-        File.Create(outputFilePath);
+        if (args.Contains("--parse")) {
+            var syntaxTree = new Parser().Parse(document);
+            Environment.Exit(0);
+        }
 
-        return outputFilePath;
+        if (args.Contains("--codegen")) {
+            generated = "";
+            Environment.Exit(0);
+        }
+
+        var outputPath = output ?? Path.ChangeExtension(input, "");
+
+        File.Create(outputPath);
+        File.WriteAllText(outputPath, generated);
     }
 }

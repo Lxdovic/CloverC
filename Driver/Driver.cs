@@ -15,8 +15,8 @@ public sealed class Driver {
         Shell.Run($"gcc -E -P {input} -o {output}");
     }
 
-    private void Compile(string input, string output) {
-        new Clover().Run([input, output]);
+    private void Compile(string[] args, string input, string output) {
+        new Clover().Run(args, input, output);
     }
 
     private void Assemble(string input, string output) {
@@ -35,7 +35,7 @@ public sealed class Driver {
         var outputFilePath = Path.ChangeExtension(preprocessedFilePath, "");
 
         Preprocess(inputFilePath, preprocessedFilePath);
-        Compile(preprocessedFilePath, compiledFilePath);
+        Compile(args, preprocessedFilePath, compiledFilePath);
         Assemble(compiledFilePath, outputFilePath);
 
         File.Delete(preprocessedFilePath);

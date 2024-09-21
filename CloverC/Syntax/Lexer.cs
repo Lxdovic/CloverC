@@ -1,36 +1,21 @@
-
 namespace CloverC.Syntax;
 
-public enum SyntaxKind {
-    EndOfFile,
-    Number,
-    EqualsEquals,
-    GreaterEquals
-}
-
-public sealed class SyntaxToken {
-    public SyntaxKind Kind { get; }
-
-    internal SyntaxToken(SyntaxKind kind) {
-        Kind = kind;
-    }
-}
-
 public sealed class Lexer {
-    private int _position;
-    private int _start;
     private readonly Dictionary<char, (char[], SyntaxKind)> _syntaxKinds = new() {
         { '\0', ([], SyntaxKind.EndOfFile) },
         { '=', (['='], SyntaxKind.EqualsEquals) },
-        { '=', (['>'], SyntaxKind.GreaterEquals) },
+        { '=', (['>'], SyntaxKind.GreaterEquals) }
     };
-    
-    
-    internal string Document { get; }
+
+    private int _position;
+    private int _start;
 
     public Lexer(string document) {
         Document = document;
     }
+
+
+    internal string Document { get; }
 
     private char Peek(int offset) {
         var index = _position - offset;
@@ -39,7 +24,7 @@ public sealed class Lexer {
 
         return Document[index];
     }
-    
+
     public SyntaxToken[] Lex() {
         // if (_syntaxKinds.TryGetValue(Peek(0), out var syntaxKind)) {
         //     foreach (var (chars, kind) in syntaxKind) {
