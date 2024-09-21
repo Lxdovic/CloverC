@@ -1,3 +1,7 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿namespace CloverC;
 
-Console.WriteLine("Hello, World!");
+public static class Program {
+    public static void Main(string[] args) {
+        new Clover().Run(args);
+    }
+}

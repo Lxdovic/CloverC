@@ -1,4 +1,6 @@
+#define test 2
+
 int main()
 {
-    return 2;
+    return test;
 }
