@@ -1,4 +1,4 @@
-#define test 2
+#define test 30
 
 int main()
 {
