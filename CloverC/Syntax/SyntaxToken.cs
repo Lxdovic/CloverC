@@ -1,9 +1,13 @@
 namespace CloverC.Syntax;
 
-public sealed class SyntaxToken {
-    public SyntaxKind Kind { get; }
-
-    internal SyntaxToken(SyntaxKind kind) {
+public class SyntaxToken {
+    internal SyntaxToken(SyntaxKind kind, string? text = null, object? value = null) {
         Kind = kind;
+        Value = value;
+        Text = text;
     }
+
+    public SyntaxKind Kind { get; }
+    public object? Value { get; }
+    public string? Text { get; }
 }
