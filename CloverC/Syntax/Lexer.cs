@@ -1,3 +1,4 @@
+using System.Data;
 using System.Text.RegularExpressions;
 
 namespace CloverC.Syntax;
@@ -36,11 +37,7 @@ public sealed class Lexer(string document) {
 
             var match = regex.Match(Document);
 
-            if (match.Length == 0) {
-                Console.WriteLine("SyntaxError");
-                Console.WriteLine(Document);
-                Environment.Exit(1);
-            }
+            if (match.Length == 0) throw new SyntaxErrorException("Syntax Error");
 
             Document = regex.Replace(Document, "");
 
