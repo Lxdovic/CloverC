@@ -17,6 +17,7 @@ public sealed class Lexer(string document) {
         { SyntaxKind.SemiColon, new Regex(@"\A;") }
     };
 
+    private string OriginalDocument { get; } = document;
     private string Document { get; set; } = document;
 
     public SyntaxToken[] Lex() {
@@ -37,7 +38,14 @@ public sealed class Lexer(string document) {
 
             var match = regex.Match(Document);
 
-            if (match.Length == 0) throw new SyntaxErrorException("Syntax Error");
+            if (match.Length == 0) {
+                var doc = Document.Split(Environment.NewLine)[0];
+                var exceptionIndex = OriginalDocument.Split(doc)[0].Length;
+                var exceptionTemplate = "Unexpected Token...";
+                throw new SyntaxErrorException(
+                    $"\n{exceptionTemplate}{doc}\n{new string(' ', exceptionTemplate.Length)}{new string('^', doc.Length)}"
+                );
+            }
 
             Document = regex.Replace(Document, "");
 
