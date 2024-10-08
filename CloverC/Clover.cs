@@ -21,7 +21,7 @@ public class Clover {
         }
 
         if (args.Contains("--parse")) {
-            var syntaxTree = new Parser().Parse(document);
+            var syntaxTree = new Parser().Parse(new Lexer(document).Lex());
             Environment.Exit(0);
         }
 

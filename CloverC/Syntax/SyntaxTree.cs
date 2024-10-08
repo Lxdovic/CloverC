@@ -1,3 +1,5 @@
 namespace CloverC.Syntax;
 
-public class SyntaxTree { }
+public sealed class SyntaxTree {
+    public CompilationUnitSyntax Root = new ([]);
+}
