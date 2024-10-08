@@ -1,11 +1,24 @@
 namespace CloverC.Syntax;
 
-public class Parser {
-    public SyntaxTree Parse(string document) {
-        return new SyntaxTree();
+public sealed class Parser {
+    private SyntaxTree _syntaxTree = new();
+    
+    public SyntaxTree Parse(SyntaxToken[] tokens) {
+        _syntaxTree = new SyntaxTree();
+        
+        foreach (var token in tokens) {
+            switch (token.Kind) {
+                case SyntaxKind.Constant: ParseConstant(token);
+                    break;
+            }
+        }
+
+        return _syntaxTree;
     }
 
-    public SyntaxTree Parse(SyntaxToken[] tokens) {
-        return new SyntaxTree();
+    public void ParseMembers() { }
+
+    private void ParseConstant(SyntaxToken token) {
+        
     }
 }
