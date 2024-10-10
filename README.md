@@ -9,3 +9,10 @@ Built by following the [Writing a C Compiler](https://nostarch.com/writing-c-com
 ```sh
 CloverC/Driver > dotnet run [path/to/file.c] [options]
 ```
+
+### options
+```
+--lex // lex only
+--parse // lex and parse
+--codegen // lex, parse, generate code but don't link
+```
