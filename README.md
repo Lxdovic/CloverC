@@ -14,5 +14,5 @@ CloverC/Driver > dotnet run [path/to/file.c] [options]
 ```
 --lex // lex only
 --parse // lex and parse
---codegen // lex, parse, generate code but don't link
+--codegen // lex, parse and generate code
 ```
