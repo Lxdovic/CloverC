@@ -1,5 +1,3 @@
 namespace CloverC.Syntax;
 
-public sealed class ExpresionSyntax : SyntaxNode {
-    
-}
+public abstract class ExpressionSyntax : SyntaxNode { }
