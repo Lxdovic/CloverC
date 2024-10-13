@@ -11,5 +11,9 @@ public enum SyntaxKind {
     IntKeyword,
     VoidKeyword,
     ReturnKeyword,
-    SemiColon
+    SemiColon,
+    GlobalStatement,
+    CompilationUnit,
+    ExpressionStatement,
+    ReturnStatement
 }
