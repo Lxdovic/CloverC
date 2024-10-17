@@ -31,10 +31,12 @@ public sealed class Lexer(string document) {
             }
 
             var (kind, regex) = Regexes
-                .Aggregate((l, r) =>
-                    l.Value.Match(Document).Length >= r.Value.Match(Document).Length
-                        ? l
-                        : r);
+                .Aggregate((l, r) => {
+                    return l.Value.Match(Document).Length <= r.Value.Match(Document).Length
+                        ? r
+                        : l;
+                });
+
 
             var match = regex.Match(Document);
 
@@ -52,6 +54,8 @@ public sealed class Lexer(string document) {
             tokens.Add(new SyntaxToken(kind, match.Value));
         }
 
-        return tokens.ToArray();
+        // foreach (var token in tokens) Console.WriteLine($"{token.Kind} {token.Value}");
+
+        return [..tokens, new SyntaxToken(SyntaxKind.EndOfFile)];
     }
 }

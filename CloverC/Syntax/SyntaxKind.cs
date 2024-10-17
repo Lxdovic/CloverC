@@ -12,8 +12,9 @@ public enum SyntaxKind {
     VoidKeyword,
     ReturnKeyword,
     SemiColon,
-    GlobalStatement,
     CompilationUnit,
     ExpressionStatement,
-    ReturnStatement
+    ReturnStatement,
+    FunctionDeclaration,
+    BlockStatement
 }

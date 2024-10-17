@@ -1,19 +1,38 @@
 using System.Collections.Immutable;
 using System.Data;
+using CloverC.Helpers;
 
 namespace CloverC.Syntax;
 
 public sealed class Parser {
-    private readonly ImmutableArray<SyntaxToken> _tokens;
+    private readonly SyntaxTree _syntaxTree = new();
+    private readonly SyntaxToken[] _tokens;
     private int _position;
-    private SyntaxTree _syntaxTree;
+
+    public Parser(SyntaxToken[] tokens) {
+        _tokens = tokens;
+    }
 
     private SyntaxToken Current => Peek(0);
+    private SyntaxToken Next => Peek(1);
 
     private SyntaxToken Peek(int offset) {
         var index = _position + offset;
         if (index >= _tokens.Length) return _tokens[_tokens.Length - 1];
         return _tokens[index];
+    }
+
+    public SyntaxTree Parse() {
+        _syntaxTree.Root = ParseCompilationUnit();
+        SyntaxTreePrinter.Print(_syntaxTree);
+
+        return _syntaxTree;
+    }
+
+    private SyntaxToken MatchToken(SyntaxKind kind) {
+        if (Current.Kind == kind) return NextToken();
+
+        throw new SyntaxErrorException("Unexpected Token");
     }
 
     private CompilationUnitSyntax ParseCompilationUnit() {
@@ -44,69 +63,59 @@ public sealed class Parser {
     }
 
     private MemberSyntax ParseMember() {
-        return ParseGlobalStatement();
+        return ParseFunctionDeclaration();
     }
 
-    private MemberSyntax ParseGlobalStatement() {
-        var statement = ParseStatement();
+    private MemberSyntax ParseFunctionDeclaration() {
+        var type = MatchToken(SyntaxKind.IntKeyword);
+        var identifier = MatchToken(SyntaxKind.Identifier);
+        var openParenthesis = MatchToken(SyntaxKind.OpenParenthesis);
+        var closeParenthesis = MatchToken(SyntaxKind.CloseParenthesis);
+        var body = ParseBlockStatement();
 
-        return new GlobalStatementSyntax(statement);
+        return new FunctionDeclarationSyntax(type, identifier, openParenthesis, closeParenthesis, body);
+    }
+
+    private BlockStatementSyntax ParseBlockStatement() {
+        var statements = ImmutableArray.CreateBuilder<StatementSyntax>();
+        var openBraceToken = MatchToken(SyntaxKind.OpenCurlyBrackets);
+
+        while (Current.Kind != SyntaxKind.EndOfFile && Current.Kind != SyntaxKind.CloseCurlyBrackets) {
+            var startToken = Current;
+            var statement = ParseStatement();
+
+            statements.Add(statement);
+
+            // if the statement was not parsed correctly, we skip to the next token
+            if (Current == startToken) NextToken();
+        }
+
+        var closeBraceToken = MatchToken(SyntaxKind.CloseCurlyBrackets);
+
+        return new BlockStatementSyntax(openBraceToken, statements.ToImmutable(), closeBraceToken);
     }
 
     private StatementSyntax ParseStatement() {
         switch (Current.Kind) {
             case SyntaxKind.ReturnKeyword:
                 return ParseReturnStatement();
-            default: return ParseExpressionStatement();
+            default:
+                return null;
         }
-    }
-
-    private StatementSyntax ParseReturnStatement() {
-        var keyword = MatchToken(SyntaxKind.ReturnKeyword);
-        var expression = Current.Kind == SyntaxKind.SemiColon ? null : ParseExpression();
-
-        return new ReturnStatementSyntax(keyword, expression!);
-    }
-    
-    private ExpressionStatementSyntax ParseExpressionStatement() {
-        var expression = ParseExpression();
-
-        return new ExpressionStatementSyntax(expression);
-    }
-
-    private ExpressionSyntax ParseExpression() {
-        return ParseConstant();
     }
 
     private ConstantSyntax ParseConstant() {
         var constant = MatchToken(SyntaxKind.Constant);
-        
+
         return new ConstantSyntax(constant);
     }
 
-    private SyntaxToken MatchToken(SyntaxKind kind) {
-        if (Current.Kind == kind) return NextToken();
+    private StatementSyntax ParseReturnStatement() {
+        var keyword = MatchToken(SyntaxKind.ReturnKeyword);
+        var constant = Current.Kind == SyntaxKind.SemiColon ? null : ParseConstant();
 
-        throw new SyntaxErrorException("Unexpected Token");
+        MatchToken(SyntaxKind.SemiColon);
+
+        return new ReturnStatementSyntax(keyword, constant);
     }
-}
-
-public sealed class ReturnStatementSyntax : StatementSyntax {
-    public ReturnStatementSyntax(SyntaxToken returnKeyword, ExpressionSyntax expression) {
-        ReturnKeyword = returnKeyword;
-        Expression = expression;
-    }
-
-    public override SyntaxKind Kind => SyntaxKind.ReturnStatement;
-    public SyntaxToken ReturnKeyword { get; }
-    public ExpressionSyntax Expression { get; }
-}
-
-public sealed class GlobalStatementSyntax : MemberSyntax {
-    public GlobalStatementSyntax(StatementSyntax statement) {
-        Statement = statement;
-    }
-
-    public StatementSyntax Statement { get; }
-    public override SyntaxKind Kind => SyntaxKind.GlobalStatement;
 }
