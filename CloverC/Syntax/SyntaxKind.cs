@@ -16,5 +16,7 @@ public enum SyntaxKind {
     ExpressionStatement,
     ReturnStatement,
     FunctionDeclaration,
-    BlockStatement
+    BlockStatement,
+    ReturnInstruction,
+    MovInstruction,
 }
