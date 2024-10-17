@@ -29,6 +29,12 @@ public sealed class Parser {
         return _syntaxTree;
     }
 
+    private SyntaxToken MatchTokens(SyntaxKind[] kinds) {
+        if (kinds.Any(k => k == Current.Kind)) return NextToken();
+
+        throw new SyntaxErrorException("Unexpected Token");
+    }
+
     private SyntaxToken MatchToken(SyntaxKind kind) {
         if (Current.Kind == kind) return NextToken();
 
@@ -67,18 +73,18 @@ public sealed class Parser {
     }
 
     private MemberSyntax ParseFunctionDeclaration() {
-        var type = MatchToken(SyntaxKind.IntKeyword);
+        var type = MatchTokens([SyntaxKind.IntKeyword, SyntaxKind.VoidKeyword]);
         var identifier = MatchToken(SyntaxKind.Identifier);
-        var openParenthesis = MatchToken(SyntaxKind.OpenParenthesis);
-        var closeParenthesis = MatchToken(SyntaxKind.CloseParenthesis);
+        MatchToken(SyntaxKind.OpenParenthesis);
+        MatchToken(SyntaxKind.CloseParenthesis);
         var body = ParseBlockStatement();
 
-        return new FunctionDeclarationSyntax(type, identifier, openParenthesis, closeParenthesis, body);
+        return new FunctionDeclarationSyntax(type, identifier, body);
     }
 
     private BlockStatementSyntax ParseBlockStatement() {
         var statements = ImmutableArray.CreateBuilder<StatementSyntax>();
-        var openBraceToken = MatchToken(SyntaxKind.OpenCurlyBrackets);
+        MatchToken(SyntaxKind.OpenCurlyBrackets);
 
         while (Current.Kind != SyntaxKind.EndOfFile && Current.Kind != SyntaxKind.CloseCurlyBrackets) {
             var startToken = Current;
@@ -90,9 +96,9 @@ public sealed class Parser {
             if (Current == startToken) NextToken();
         }
 
-        var closeBraceToken = MatchToken(SyntaxKind.CloseCurlyBrackets);
+        MatchToken(SyntaxKind.CloseCurlyBrackets);
 
-        return new BlockStatementSyntax(openBraceToken, statements.ToImmutable(), closeBraceToken);
+        return new BlockStatementSyntax(statements.ToImmutable());
     }
 
     private StatementSyntax ParseStatement() {
