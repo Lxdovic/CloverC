@@ -118,10 +118,15 @@ public sealed class Parser {
 
     private StatementSyntax ParseReturnStatement() {
         var keyword = MatchToken(SyntaxKind.ReturnKeyword);
-        var constant = Current.Kind == SyntaxKind.SemiColon ? null : ParseConstant();
+        var expression = Current.Kind == SyntaxKind.SemiColon ? null : ParseExpression();
 
         MatchToken(SyntaxKind.SemiColon);
 
-        return new ReturnStatementSyntax(keyword, constant);
+        return new ReturnStatementSyntax(keyword, expression);
+    }
+
+    private ExpressionSyntax ParseExpression() {
+        // no expressions yet, only constants
+        return ParseConstant();
     }
 }

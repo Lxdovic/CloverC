@@ -57,7 +57,7 @@ public static class SyntaxTreePrinter {
 
         sb.Append("Return(\n");
 
-        if (statement.Constant != null) PrintConstantSyntax(sb, statement.Constant, indent + 1);
+        if (statement.Expression != null) PrintConstantSyntax(sb, (ConstantSyntax)statement.Expression, indent + 1);
 
         sb.Append($"\n{new string(' ', indent * 2)})");
     }

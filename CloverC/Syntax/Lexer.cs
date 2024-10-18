@@ -54,8 +54,6 @@ public sealed class Lexer(string document) {
             tokens.Add(new SyntaxToken(kind, match.Value));
         }
 
-        // foreach (var token in tokens) Console.WriteLine($"{token.Kind} {token.Value}");
-
         return [..tokens, new SyntaxToken(SyntaxKind.EndOfFile)];
     }
 }
