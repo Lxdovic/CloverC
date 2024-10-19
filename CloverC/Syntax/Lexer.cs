@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 namespace CloverC.Syntax;
 
 public sealed class Lexer(string document) {
-    private static readonly Dictionary<SyntaxKind, Regex> Regexes = new() {
+    private static readonly Dictionary<SyntaxKind, Regex> TokenPatterns = new() {
         { SyntaxKind.Identifier, new Regex(@"\A[a-zA-Z_]\w*\b") },
         { SyntaxKind.Constant, new Regex(@"\A[0-9]+\b") },
         { SyntaxKind.IntKeyword, new Regex(@"\Aint\b") },
@@ -17,43 +17,44 @@ public sealed class Lexer(string document) {
         { SyntaxKind.SemiColon, new Regex(@"\A;") }
     };
 
-    private string OriginalDocument { get; } = document;
     private string Document { get; set; } = document;
+
+    private KeyValuePair<SyntaxKind, Regex> ClassifyToken() {
+        var token = TokenPatterns
+            .Aggregate((l, r) =>
+                l.Value.Match(Document).Length <=
+                r.Value.Match(Document).Length
+                    ? r
+                    : l
+            );
+
+        return token;
+    }
 
     public SyntaxToken[] Lex() {
         List<SyntaxToken> tokens = [];
 
         while (Document.Length > 0) {
+            if (Document[0] == '\0') {
+                tokens.Add(new SyntaxToken(SyntaxKind.EndOfFile));
+                break;
+            }
+
             if (char.IsWhiteSpace(Document[0])) {
                 Document = Document.TrimStart();
-
                 continue;
             }
 
-            var (kind, regex) = Regexes
-                .Aggregate((l, r) => {
-                    return l.Value.Match(Document).Length <= r.Value.Match(Document).Length
-                        ? r
-                        : l;
-                });
-
-
+            var (kind, regex) = ClassifyToken();
             var match = regex.Match(Document);
 
-            if (match.Length == 0) {
-                var doc = Document.Split(Environment.NewLine)[0];
-                var exceptionIndex = OriginalDocument.Split(doc)[0].Length;
-                var exceptionTemplate = "Unexpected Token...";
-                throw new SyntaxErrorException(
-                    $"\n{exceptionTemplate}{doc}\n{new string(' ', exceptionTemplate.Length)}{new string('^', doc.Length)}"
-                );
-            }
-
-            Document = regex.Replace(Document, "");
+            if (match.Length == 0) throw new SyntaxErrorException("Unexpected Token");
 
             tokens.Add(new SyntaxToken(kind, match.Value));
+
+            Document = Document[match.Length..];
         }
 
-        return [..tokens, new SyntaxToken(SyntaxKind.EndOfFile)];
+        return [..tokens];
     }
 }
