@@ -15,6 +15,16 @@ public static class SyntaxTreePrinter {
 
         Console.WriteLine(sb.ToString());
     }
+    
+    public static void Print(SyntaxTree syntaxTree, StringBuilder sb) {
+        sb.Append("Program(\n  members: [\n");
+
+        foreach (var member in syntaxTree.Root.Members) PrintMember(sb, member, 2);
+
+        sb.Append("  ]\n)");
+
+        Console.WriteLine(sb.ToString());
+    }
 
     private static void PrintMember(StringBuilder sb, MemberSyntax member, int indent) {
         switch (member.Kind) {
