@@ -15,4 +15,12 @@ public class LexerTests {
 
         Assert.Throws<SyntaxErrorException>(lexer.Lex);
     }
+    
+    [Fact]
+    public void LexerReturnsEndOfFileToken() {
+        var lexer = new Lexer("");
+        var tokens = lexer.Lex();
+        
+        Assert.Equal(SyntaxKind.EndOfFile, tokens[^1].Kind);
+    }
 }

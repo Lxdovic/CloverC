@@ -35,11 +35,6 @@ public sealed class Lexer(string document) {
         List<SyntaxToken> tokens = [];
 
         while (Document.Length > 0) {
-            if (Document[0] == '\0') {
-                tokens.Add(new SyntaxToken(SyntaxKind.EndOfFile));
-                break;
-            }
-
             if (char.IsWhiteSpace(Document[0])) {
                 Document = Document.TrimStart();
                 continue;
@@ -54,7 +49,7 @@ public sealed class Lexer(string document) {
 
             Document = Document[match.Length..];
         }
-
-        return [..tokens];
+        
+        return [..tokens, new SyntaxToken(SyntaxKind.EndOfFile)];
     }
 }
