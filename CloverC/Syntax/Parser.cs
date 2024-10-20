@@ -25,8 +25,6 @@ public sealed class Parser {
     public SyntaxTree Parse() {
         _syntaxTree.Root = ParseCompilationUnit();
 
-        SyntaxTreePrinter.Print(_syntaxTree);
-
         return _syntaxTree;
     }
 
