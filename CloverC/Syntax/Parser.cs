@@ -24,6 +24,7 @@ public sealed class Parser {
 
     public SyntaxTree Parse() {
         _syntaxTree.Root = ParseCompilationUnit();
+
         SyntaxTreePrinter.Print(_syntaxTree);
 
         return _syntaxTree;
@@ -32,13 +33,14 @@ public sealed class Parser {
     private SyntaxToken MatchTokens(SyntaxKind[] kinds) {
         if (kinds.Any(k => k == Current.Kind)) return NextToken();
 
-        throw new SyntaxErrorException("Unexpected Token");
+        throw new SyntaxErrorException(
+            $"Unexpected Token: {Current.Kind}, expected one of: {string.Join(", ", kinds)}");
     }
 
     private SyntaxToken MatchToken(SyntaxKind kind) {
         if (Current.Kind == kind) return NextToken();
 
-        throw new SyntaxErrorException("Unexpected Token");
+        throw new SyntaxErrorException($"Unexpected Token: {Current.Kind}, expected: {kind}");
     }
 
     private CompilationUnitSyntax ParseCompilationUnit() {
@@ -76,10 +78,15 @@ public sealed class Parser {
         var type = MatchTokens([SyntaxKind.IntKeyword, SyntaxKind.VoidKeyword]);
         var identifier = MatchToken(SyntaxKind.Identifier);
         MatchToken(SyntaxKind.OpenParenthesis);
+        ParseParameters();
         MatchToken(SyntaxKind.CloseParenthesis);
         var body = ParseBlockStatement();
 
         return new FunctionDeclarationSyntax(type, identifier, body);
+    }
+
+    private void ParseParameters() {
+        if (Current.Kind == SyntaxKind.VoidKeyword) NextToken();
     }
 
     private BlockStatementSyntax ParseBlockStatement() {
@@ -106,7 +113,7 @@ public sealed class Parser {
             case SyntaxKind.ReturnKeyword:
                 return ParseReturnStatement();
             default:
-                return null;
+                throw new SyntaxErrorException($"Unexpected Token: {Current.Value}");
         }
     }
 
