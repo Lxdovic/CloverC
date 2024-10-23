@@ -12,7 +12,7 @@ CloverC/Driver > dotnet run [path/to/file.c] [options]
 
 ### options
 ```
---lex // lex only
---parse // lex and parse
---codegen // lex, parse and generate code
+--lex
+--parse
+--codegen
 ```
